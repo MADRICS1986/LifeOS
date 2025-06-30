@@ -1,65 +1,55 @@
 import React, { useEffect, useState } from "react";
 
-export default function InsightEngine({ moodData, routineData, budgetData }) {
-  const [insights, setInsights] = useState([]);
+const InsightEngine = () => {
+  const [insight, setInsight] = useState("");
+  const [budgetData, setBudgetData] = useState([]);
+  const [routineData, setRoutineData] = useState([]);
+  const [mood, setMood] = useState(null);
 
   useEffect(() => {
-    const generateInsights = () => {
-      const newInsights = [];
+    const storedBudget = JSON.parse(localStorage.getItem("budget-entries")) || [];
+    const storedRoutine = JSON.parse(localStorage.getItem("routine-tasks")) || [];
+    const storedMood = JSON.parse(localStorage.getItem("mood-log")) || [];
 
-      // Mood Insight
-      if (moodData.length > 0) {
-        const moods = moodData.map((m) => m.mood);
-        const moodFrequency = moods.reduce((acc, mood) => {
-          acc[mood] = (acc[mood] || 0) + 1;
-          return acc;
-        }, {});
-        const topMood = Object.entries(moodFrequency).sort((a, b) => b[1] - a[1])[0];
-        newInsights.push(`You're feeling mostly "${topMood[0]}" lately. Try journaling or meditation if it's a low mood.`);
-      }
+    const today = new Date().toLocaleDateString();
 
-      // Routine Insight
-      if (routineData.length > 0) {
-        const completed = routineData.filter((r) => r.completed).length;
-        const total = routineData.length;
-        const percent = ((completed / total) * 100).toFixed(0);
-        newInsights.push(`You've completed ${percent}% of your routines. Great job staying disciplined!`);
-      }
+    const todayMood = storedMood.find((m) => m.date === today);
+    const todayTasks = storedRoutine.filter((t) => t.date === today);
+    const completedTasks = todayTasks.filter((t) => t.done);
 
-      // Budget Insight
-      if (budgetData.length > 0) {
-        const income = budgetData.filter((tx) => tx.type === "income").reduce((sum, tx) => sum + tx.amount, 0);
-        const expense = budgetData.filter((tx) => tx.type === "expense").reduce((sum, tx) => sum + tx.amount, 0);
-        if (expense > income) {
-          newInsights.push(`You're spending more than you earn. Consider reducing expenses or tracking subscriptions.`);
-        } else {
-          newInsights.push(`Your finances are stable. Keep saving and building that buffer!`);
-        }
-      }
+    setMood(todayMood);
+    setRoutineData({ total: todayTasks.length, done: completedTasks.length });
+    setBudgetData(storedBudget);
 
-      if (newInsights.length === 0) {
-        newInsights.push("Start logging your mood, routines, and spending to unlock personalized insights!");
-      }
+    const totalIncome = storedBudget
+      .filter((b) => b.type === "income")
+      .reduce((sum, b) => sum + Number(b.amount), 0);
 
-      setInsights(newInsights);
-    };
+    const totalExpense = storedBudget
+      .filter((b) => b.type === "expense")
+      .reduce((sum, b) => sum + Number(b.amount), 0);
 
-    generateInsights();
-  }, [moodData, routineData, budgetData]);
+    let summary = "Here's your personal insight for today: \n\n";
+    summary += `💰 Budget: You've earned ₹${totalIncome} and spent ₹${totalExpense}. `;
+    summary += totalExpense < totalIncome ? "You’re managing well. Keep saving! 💸" : "Watch your spending 💡";
+    summary += `\n⏰ Routine: ${completedTasks.length} of ${todayTasks.length} tasks done today. Small steps still count 💪`;
+
+    if (todayMood?.mood) {
+      summary += `\n🧠 Mood: You felt ${todayMood.mood}. Proud of you for tracking it 💙`;
+    }
+
+    setInsight(summary);
+  }, []);
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 max-w-2xl mx-auto mt-10">
-      <h2 className="text-2xl font-bold mb-4 text-center text-blue-700 dark:text-blue-300">
-        🔍 AI-Powered Insights
-      </h2>
-      <ul className="space-y-3 list-disc list-inside text-gray-700 dark:text-gray-200">
-        {insights.map((insight, index) => (
-          <li key={index} className="bg-blue-50 dark:bg-gray-700 p-3 rounded-md">
-            {insight}
-          </li>
-        ))}
-      </ul>
+    <div className="min-h-screen px-6 py-8 font-[Poppins] bg-white dark:bg-black text-black dark:text-white">
+      <h2 className="text-3xl font-bold mb-4">🔍 Insight Engine</h2>
+      <div className="bg-gradient-to-br from-purple-100 to-purple-300 dark:from-white/5 dark:to-white/10 p-6 rounded-xl shadow-xl whitespace-pre-line">
+        {insight}
+      </div>
     </div>
   );
-}
+};
+
+export default InsightEngine;
 

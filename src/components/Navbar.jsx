@@ -22,6 +22,15 @@ const Navbar = () => {
     </nav>
   );
 };
+<button
+  onClick={() => {
+    const html = document.documentElement;
+    html.classList.toggle("dark");
+  }}
+  className="bg-white/10 px-3 py-1 rounded-xl hover:bg-white/20"
+>
+  🌗 Toggle Theme
+</button>
 
 export default Navbar;
 

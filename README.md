@@ -1,12 +1,88 @@
-# React + Vite
+# LifeOS 🌌 — Your Emotion-Aware Personal Operating System
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**LifeOS** is a futuristic and emotional personal dashboard designed to help users track their mood, routines, finances, and AI-powered insights — all wrapped in a magical space-inspired UI ✨. Whether you're feeling down, productive, or somewhere in between, LifeOS is here to support you every step of the way.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 Features
 
-## Expanding the ESLint configuration
+### 🎭 Mood Tracker
+- Select from 5 emotions
+- Add a mood note or daily diary
+- Log and visualize how you feel every day
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### ⏰ Routine Manager
+- Add, complete, and manage daily tasks
+- Visualize productivity
+- Stay motivated with subtle animations & themes
+
+### 💸 Budget Manager
+- Add income & expenses
+- See your balance in real time
+- Smart financial summaries powered by AI
+
+### 🧠 Insight Engine
+- Get actionable insights daily based on your activity
+- See your progress across mood, finance & productivity
+
+### 📅 Calendar View
+- Explore past entries (Mood, Budget, Routine) by date
+- Intuitive and minimal UI
+
+### 💬 Bubble AI Assistant
+- Cute floating chatbot
+- Greets you every time you open the app
+- Customizable in future updates
+
+---
+
+## 📸 Screenshots
+| Dashboard | Mood Tracker | Budget Manager | Insight Engine |
+|----------|--------------|----------------|----------------|
+| ![Dashboard](public/dashboard.png) | ![Mood](public/mood.png) | ![Budget](public/budget.png) | ![Insight](public/insight.png) |
+
+---
+
+## ⚙️ Tech Stack
+- **Frontend**: React.js + Vite
+- **Styling**: Tailwind CSS (Dark/Light themes)
+- **Animation**: Framer Motion
+- **Icons**: Lucide React
+
+---
+
+## 🧑‍🚀 Setup & Run Locally
+
+```bash
+# Clone the repo
+git clone https://github.com/MADRICS1986/LifeOS.git
+cd LifeOS
+
+# Install dependencies
+npm install
+
+# Run the development server
+npm run dev
+```
+
+---
+
+## ❤️ Built With Love
+
+Made with dedication during the **Boltz Hackathon 2025** by:
+
+👩‍💻 Maheswari Murugesan Pillai (Meenie) — `@MADRICS1986`
+
+---
+
+## 🧠 Future Add-ons
+- AI-powered conversations with diary
+- Account system with login
+- Streak & habit tracking
+- Offline PWA support
+
+---
+
+## 📃 License
+MIT License. Free to fork, remix, and explore. Just give credits 🌱
+

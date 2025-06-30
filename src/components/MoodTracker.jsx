@@ -1,71 +1,82 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
+
+const moods = [
+  { emoji: "😢", label: "Sad", message: "Proud of you for expressing how you feel 💫" },
+  { emoji: "😐", label: "Fine", message: "I hear you. Let’s take it one step at a time 💙" },
+  { emoji: "😊", label: "Good", message: "You’re doing amazing, even when it’s tough." },
+  { emoji: "😍", label: "Loved", message: "You are cherished. Never forget that 💖" },
+  { emoji: "🤩", label: "Happy", message: "Your joy is contagious 🌞" },
+];
 
 const MoodTracker = () => {
-  const [mood, setMood] = useState('');
-  const [log, setLog] = useState([]);
-  const [sparkle, setSparkle] = useState(false);
+  const [selected, setSelected] = useState(null);
+  const [note, setNote] = useState("");
+  const [saved, setSaved] = useState(false);
+  const navigate = useNavigate();
 
-  const messages = {
-    sad: "Proud of you for expressing how you feel 💫",
-    happy: "Yay! I’m happy with you 💖",
-    loved: "You’re doing amazing, even when it’s tough.",
-    fine: "Let’s take it one step at a time 💙",
-    default: "Breathe in... you’ve got this.",
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!mood.trim()) return;
-
-    const msg =
-      messages[mood.toLowerCase()] || messages.default;
-
-    setLog([...log, { text: mood, reply: msg }]);
-    setMood('');
-
-    setSparkle(true);
-    setTimeout(() => setSparkle(false), 1500);
-
-    localStorage.setItem('moodLog', JSON.stringify([...log, { text: mood, reply: msg }]));
+  const handleSave = () => {
+    const today = new Date().toISOString().split("T")[0];
+    const data = { mood: selected.label, note, time: Date.now() };
+    localStorage.setItem(`mood-${today}`, JSON.stringify(data));
+    setSaved(true);
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-950 via-indigo-900 to-black text-white p-6 relative">
-      <h2 className="text-3xl font-bold mb-6">🧠 Mood Tracker</h2>
+    <div className="min-h-screen p-6 font-[Poppins] bg-white dark:bg-black text-black dark:text-white">
+      <h2 className="text-3xl font-bold mb-4">🧠 How are you feeling today?</h2>
 
-      <form onSubmit={handleSubmit} className="mb-6 flex gap-4">
-        <input
-          type="text"
-          value={mood}
-          onChange={(e) => setMood(e.target.value)}
-          placeholder="How are you feeling?"
-          className="text-black p-2 rounded-xl w-full"
-        />
-        <button type="submit" className="bg-purple-600 px-4 py-2 rounded-xl hover:bg-purple-700">
-          Submit
-        </button>
-      </form>
-
-      {sparkle && (
-        <motion.div
-          className="absolute top-1/2 left-1/2 text-4xl text-pink-400 pointer-events-none"
-          initial={{ opacity: 1, scale: 1 }}
-          animate={{ opacity: 0, scale: 3 }}
-          transition={{ duration: 1.5 }}
-        >
-          ✨
-        </motion.div>
-      )}
-
-      <div className="space-y-4">
-        {log.map((entry, i) => (
-          <div key={i}>
-            <p className="text-lg">🗣️ {entry.text}</p>
-            <p className="text-purple-300">💬 {entry.reply}</p>
-          </div>
+      <div className="flex gap-4 flex-wrap mb-6">
+        {moods.map((mood, i) => (
+          <motion.button
+            key={i}
+            onClick={() => {
+              setSelected(mood);
+              setSaved(false);
+            }}
+            whileTap={{ scale: 0.9 }}
+            className={`px-5 py-3 text-xl rounded-full transition ${
+              selected?.label === mood.label
+                ? "bg-purple-600 text-white"
+                : "bg-gray-200 dark:bg-white/10"
+            }`}
+          >
+            {mood.emoji} {mood.label}
+          </motion.button>
         ))}
       </div>
+
+      {selected && (
+        <>
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-4"
+          >
+            <p className="text-lg italic text-purple-500">{selected.message}</p>
+            <textarea
+              rows={3}
+              placeholder="Want to add a note for today?"
+              className="mt-3 w-full p-3 rounded-xl bg-gray-100 dark:bg-white/10 border-none resize-none outline-none"
+              value={note}
+              onChange={(e) => setNote(e.target.value)}
+            />
+          </motion.div>
+
+          {!saved ? (
+            <motion.button
+              whileTap={{ scale: 0.95 }}
+              onClick={handleSave}
+              className="px-6 py-3 mt-2 rounded-xl bg-purple-600 text-white font-semibold shadow-lg hover:bg-purple-700"
+            >
+              Save Diary
+            </motion.button>
+          ) : (
+            <p className="mt-4 text-green-500 font-semibold">Saved! 💾</p>
+          )}
+        </>
+      )}
     </div>
   );
 };
